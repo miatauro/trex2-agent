@@ -36,7 +36,7 @@
 
 # include "config.hh"
 
-# define TREX_PP_SYSTEM_FILE <PLASMA/Filters.hh>
+# define TREX_PP_SYSTEM_FILE <Filters.hh>
 # include <trex/europa/bits/system_header.hh>
 
 namespace TREX {

@@ -34,13 +34,13 @@
 #include <trex/europa/Assembly.hh>
 
 // include plasma header as system files in order to disable warnings
-# define TREX_PP_SYSTEM_FILE <PLASMA/CFunctions.hh>
+# define TREX_PP_SYSTEM_FILE <CFunctions.hh>
 # include <trex/europa/bits/system_header.hh>
 
-# define TREX_PP_SYSTEM_FILE <PLASMA/UnboundVariableDecisionPoint.hh>
+# define TREX_PP_SYSTEM_FILE <UnboundVariableDecisionPoint.hh>
 # include <trex/europa/bits/system_header.hh>
 
-# define TREX_PP_SYSTEM_FILE <PLASMA/ValueSource.hh>
+# define TREX_PP_SYSTEM_FILE <ValueSource.hh>
 # include <trex/europa/bits/system_header.hh>
 
 #include "EarliestFirstFlawManager.hh"

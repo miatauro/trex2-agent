@@ -43,11 +43,11 @@
 # include <trex/europa/config.hh>
 
 // include plasma header as system files in order to disable warnings
-# define TREX_PP_SYSTEM_FILE <PLASMA/Debug.hh>
+# define TREX_PP_SYSTEM_FILE <Debug.hh>
 # include <trex/europa/bits/system_header.hh>
-# define TREX_PP_SYSTEM_FILE <PLASMA/Error.hh>
+# define TREX_PP_SYSTEM_FILE <Error.hh>
 # include <trex/europa/bits/system_header.hh>
-# define TREX_PP_SYSTEM_FILE <PLASMA/CFunction.hh>
+# define TREX_PP_SYSTEM_FILE <CFunction.hh>
 # include <trex/europa/bits/system_header.hh>
 
 namespace TREX {

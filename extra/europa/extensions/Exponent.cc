@@ -1,9 +1,9 @@
 #include "Exponent.hh"
 
 // include plasma header as system files in order to disable warnings
-# define TREX_PP_SYSTEM_FILE <PLASMA/ConstrainedVariable.hh>
+# define TREX_PP_SYSTEM_FILE <ConstrainedVariable.hh>
 # include <trex/europa/bits/system_header.hh>
-# define TREX_PP_SYSTEM_FILE <PLASMA/Domains.hh>
+# define TREX_PP_SYSTEM_FILE <Domains.hh>
 # include <trex/europa/bits/system_header.hh>
 
 # include "interv_patch.hh"

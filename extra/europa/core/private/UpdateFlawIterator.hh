@@ -53,8 +53,8 @@ namespace TREX {
         UpdateFlawIterator(SynchronizationManager &manager);
         ~UpdateFlawIterator() {}
         
-      private:
         EUROPA::EntityId const nextCandidate();
+      private:
         Assembly::internal_iterator m_it;
         
         Assembly &m_assembly;

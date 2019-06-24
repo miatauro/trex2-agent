@@ -4,9 +4,9 @@
 # include <trex/europa/config.hh>
 
 // include plasma header as system files in order to disable warnings
-# define TREX_PP_SYSTEM_FILE <PLASMA/Constraint.hh>
+# define TREX_PP_SYSTEM_FILE <Constraint.hh>
 # include <trex/europa/bits/system_header.hh>
-# define TREX_PP_SYSTEM_FILE <PLASMA/Domain.hh>
+# define TREX_PP_SYSTEM_FILE <Domain.hh>
 # include <trex/europa/bits/system_header.hh>
 
 

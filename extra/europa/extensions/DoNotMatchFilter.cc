@@ -33,6 +33,9 @@
  */
 #include "DoNotMatchFilter.hh"
 
+#include "Debug.hh"
+#include "tinyxml.h"
+
 using namespace TREX::europa;
 
 DoNotMatchFilter::DoNotMatchFilter(EUROPA::TiXmlElement const &cfg)
@@ -52,6 +55,6 @@ DoNotMatchFilter::DoNotMatchFilter(EUROPA::TiXmlElement const &cfg)
 
 bool DoNotMatchFilter::test(EUROPA::EntityId const &entity) {
   bool ret = m_names.find(entity->getName())==m_names.end();
-  debugMsg("trex:not_match", "Testing for variable "<<entity->getName().toString()<<": "<<ret);
+  debugMsg("trex:not_match", "Testing for variable "<<entity->getName()<<": "<<ret);
   return ret;
 }

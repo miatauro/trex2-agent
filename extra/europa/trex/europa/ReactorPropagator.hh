@@ -37,7 +37,7 @@
 # include "config.hh"
 
 // include plasma header as system files in order to disable warnings
-# define TREX_PP_SYSTEM_FILE <PLASMA/Propagators.hh>
+# define TREX_PP_SYSTEM_FILE <Propagators.hh>
 # include <trex/europa/bits/system_header.hh>
 
 namespace TREX {

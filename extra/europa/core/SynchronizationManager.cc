@@ -39,11 +39,11 @@
 
 
 // include plasma header as system files in order to disable warnings
-# define TREX_PP_SYSTEM_FILE <PLASMA/Timeline.hh>
+# define TREX_PP_SYSTEM_FILE <Timeline.hh>
 # include <trex/europa/bits/system_header.hh>
-# define TREX_PP_SYSTEM_FILE <PLASMA/Token.hh>
+# define TREX_PP_SYSTEM_FILE <Token.hh>
 # include <trex/europa/bits/system_header.hh>
-# define TREX_PP_SYSTEM_FILE <PLASMA/TokenVariable.hh>
+# define TREX_PP_SYSTEM_FILE <TokenVariable.hh>
 # include <trex/europa/bits/system_header.hh>
 
 using namespace TREX::europa;
@@ -127,3 +127,6 @@ std::string SynchronizationManager::toString(EUROPA::EntityId const &entity) con
 }
 
 
+bool SynchronizationManager::noMoreFlaws() {
+  return details::UpdateFlawIterator(*this).nextCandidate().isNoId();
+}

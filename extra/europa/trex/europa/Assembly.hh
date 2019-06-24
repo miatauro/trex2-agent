@@ -42,15 +42,15 @@
 # include <trex/utils/cpu_clock.hh>
 # include <trex/utils/asio_fstream.hh>
 
-# define TREX_PP_SYSTEM_FILE <PLASMA/PlanDatabase.hh>
+# define TREX_PP_SYSTEM_FILE <PlanDatabase.hh>
 # include <trex/europa/bits/system_header.hh>
-# define TREX_PP_SYSTEM_FILE <PLASMA/RulesEngineDefs.hh>
+# define TREX_PP_SYSTEM_FILE <RulesEngineDefs.hh>
 # include <trex/europa/bits/system_header.hh>
-# define TREX_PP_SYSTEM_FILE <PLASMA/Module.hh>
+# define TREX_PP_SYSTEM_FILE <Module.hh>
 # include <trex/europa/bits/system_header.hh>
-# define TREX_PP_SYSTEM_FILE <PLASMA/Engine.hh>
+# define TREX_PP_SYSTEM_FILE <Engine.hh>
 # include <trex/europa/bits/system_header.hh>
-# define TREX_PP_SYSTEM_FILE <PLASMA/Solver.hh>
+# define TREX_PP_SYSTEM_FILE <Solver.hh>
 # include <trex/europa/bits/system_header.hh>
 
 # include <boost/iterator/filter_iterator.hpp>
@@ -1626,7 +1626,7 @@ namespace TREX {
        *
        * Store all the possible predicates of @p obj in the set @p pred
        */
-      void predicates(EUROPA::ObjectId const &obj, std::set<EUROPA::LabelStr> &pred) const {
+      void predicates(EUROPA::ObjectId const &obj, std::set<std::string> &pred) const {
         return schema()->getPredicates(obj->getObjectType(), pred);
       }
       /** @brief New observation notification

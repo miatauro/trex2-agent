@@ -39,15 +39,15 @@
 #include <trex/utils/chrono_helper.hh>
 
 // include plasma header as system files in order to disable warnings
-# define TREX_PP_SYSTEM_FILE <PLASMA/Timeline.hh>
+# define TREX_PP_SYSTEM_FILE <Timeline.hh>
 # include <trex/europa/bits/system_header.hh>
-# define TREX_PP_SYSTEM_FILE <PLASMA/Token.hh>
+# define TREX_PP_SYSTEM_FILE <Token.hh>
 # include <trex/europa/bits/system_header.hh>
-# define TREX_PP_SYSTEM_FILE <PLASMA/TokenVariable.hh>
+# define TREX_PP_SYSTEM_FILE <TokenVariable.hh>
 # include <trex/europa/bits/system_header.hh>
-# define TREX_PP_SYSTEM_FILE <PLASMA/PlanDatabaseWriter.hh>
+# define TREX_PP_SYSTEM_FILE <PlanDatabaseWriter.hh>
 # include <trex/europa/bits/system_header.hh>
-# define TREX_PP_SYSTEM_FILE <PLASMA/ThreatDecisionPoint.hh>
+# define TREX_PP_SYSTEM_FILE <ThreatDecisionPoint.hh>
 # include <trex/europa/bits/system_header.hh>
 
 #include <boost/scope_exit.hpp>
@@ -266,7 +266,7 @@ void EuropaReactor::notify(Observation const &obs) {
   std::string pred = obs.predicate().str();
   EUROPA::TokenId fact = new_obs(obj, pred, undefined);
   //syslog(null, info)<<"Converting observation "<<obs<<" to token "
-  //  <<fact->getUnqualifiedPredicateName().toString()<<'('<<fact->getKey()<<')';
+  //  <<fact->getUnqualifiedPredicateName()<<'('<<fact->getKey()<<')';
 
   if( undefined )
     syslog(null, warn)<<"Predicate "<<obs.object()<<"."<<obs.predicate()
@@ -293,7 +293,8 @@ void EuropaReactor::handleRequest(goal_id const &request) {
     if( !restrict_token(goal, *request) ) {
       syslog(null, error)<<"Failed to restrict some attributes of request "
 			 <<*request<<"\n\t rejecting it.";
-      goal->discard();
+      delete static_cast<EUROPA::Token*>(goal);
+      //goal->discard();
     } else {
       // The goal appears to be correct so far : add it to my set of goals
       syslog(info)<<"Integrated request "<<request
@@ -375,8 +376,8 @@ void EuropaReactor::handleTickStart() {
 bool EuropaReactor::dispatch(EUROPA::TimelineId const &tl,
                              EUROPA::TokenId const &tok) {
   if( m_dispatched.left.find(tok->getKey())==m_dispatched.left.end() ) {
-    TREX::utils::Symbol name(tl->getName().toString());
-    Goal my_goal(name, tok->getUnqualifiedPredicateName().toString());
+    TREX::utils::Symbol name(tl->getName());
+    Goal my_goal(name, tok->getUnqualifiedPredicateName());
     std::vector<EUROPA::ConstrainedVariableId> const &attrs = tok->parameters();
 
     // Get start, duration and end
@@ -393,10 +394,10 @@ bool EuropaReactor::dispatch(EUROPA::TimelineId const &tl,
     for(std::vector<EUROPA::ConstrainedVariableId>::const_iterator a=attrs.begin();
         attrs.end()!=a; ++a) {
       // Exclude "implicit_var_*"
-      if( 0!=(*a)->getName().toString().compare(0, implicit_var.length(), 
+      if( 0!=(*a)->getName().compare(0, implicit_var.length(), 
 						implicit_var) ) {
 	UNIQ_PTR<DomainBase> dom(details::trex_domain((*a)->lastDomain()));
-	Variable attr((*a)->getName().toString(), *dom);
+	Variable attr((*a)->getName(), *dom);
 	my_goal.restrictAttribute(attr);
       }
     }
@@ -409,7 +410,7 @@ bool EuropaReactor::dispatch(EUROPA::TimelineId const &tl,
     } else
       return false;
   } else {
-    debugMsg("trex:dispatch", "Token "<<tok->getUnqualifiedPredicateName().toString()<<'('<<tok->getKey()<<") was already dispatched.");
+    debugMsg("trex:dispatch", "Token "<<tok->getUnqualifiedPredicateName()<<'('<<tok->getKey()<<") was already dispatched.");
   }
   return true;
 }
@@ -417,8 +418,8 @@ bool EuropaReactor::dispatch(EUROPA::TimelineId const &tl,
 void EuropaReactor::plan_dispatch(EUROPA::TimelineId const &tl, EUROPA::TokenId const &tok)
 {
   if( m_plan_tokens.left.find(tok->getKey()) == m_plan_tokens.left.end() ) {
-    TREX::utils::Symbol name(tl->getName().toString());
-    Goal my_goal(name, tok->getUnqualifiedPredicateName().toString());
+    TREX::utils::Symbol name(tl->getName());
+    Goal my_goal(name, tok->getUnqualifiedPredicateName());
     restrict_goal(my_goal, tok);
 
     goal_id request = postPlanToken(my_goal);
@@ -448,10 +449,10 @@ void EuropaReactor::restrict_goal(Goal& goal, EUROPA::TokenId const &tok)
     for(std::vector<EUROPA::ConstrainedVariableId>::const_iterator a=attrs.begin();
         attrs.end()!=a; ++a) {
       // ignore implicit_var
-      if( 0!=(*a)->getName().toString().compare(0, implicit_var.length(), 
+      if( 0!=(*a)->getName().compare(0, implicit_var.length(), 
 						implicit_var)) {
 	UNIQ_PTR<DomainBase> dom(details::trex_domain((*a)->lastDomain()));
-	Variable attr((*a)->getName().toString(), *dom);
+	Variable attr((*a)->getName(), *dom);
 	goal.restrictAttribute(attr);
       }
     }
@@ -562,7 +563,7 @@ bool EuropaReactor::discard(EUROPA::TokenId const &tok) {
   if( tok->isMerged() )
     active = tok->getActiveToken();
   
-  //syslog(null, info)<<"Discarding "<<tok->getUnqualifiedPredicateName().toString()<<'('<<tok->getKey()<<')';
+  //syslog(null, info)<<"Discarding "<<tok->getUnqualifiedPredicateName()<<'('<<tok->getKey()<<')';
   
   if( m_active_requests.left.end()!=i ) {
     if( constraint_engine()->provenInconsistent() ) {
@@ -581,7 +582,7 @@ bool EuropaReactor::discard(EUROPA::TokenId const &tok) {
 //    if( !constraint_engine()->provenInconsistent() ) {
 //      syslog(null, info)<<"Discarded completed request ["<<i->second<<"] with last europa state "<<state->toString()
 //        <<"\n\t "<<active->getObject()->toString()<<'.'
-//        <<active->getUnqualifiedPredicateName().toString()
+//        <<active->getUnqualifiedPredicateName()
 //        <<" start="<<active->start()->toString()
 //        <<", duration="<<active->duration()->toString()
 //        <<", end="<<active->end()->toString();
@@ -769,18 +770,18 @@ void EuropaReactor::resume() {
 void EuropaReactor::notify(EUROPA::LabelStr const &object,
 			   EUROPA::TokenId const &tok) {
   Observation obs(object.c_str(),
-		  tok->getUnqualifiedPredicateName().toString());
+		  tok->getUnqualifiedPredicateName());
 
   std::vector<EUROPA::ConstrainedVariableId> const &attr = tok->parameters();
 
   for(std::vector<EUROPA::ConstrainedVariableId>::const_iterator a=attr.begin();
       attr.end()!=a; ++a) {
     // ignore implicit_var
-    if( 0!=(*a)->getName().toString().compare(0, implicit_var.length(), 
+    if( 0!=(*a)->getName().compare(0, implicit_var.length(), 
 					      implicit_var) ) {
       UNIQ_PTR<TREX::transaction::DomainBase>
 	dom(details::trex_domain((*a)->lastDomain()));
-      TREX::transaction::Variable var((*a)->getName().toString(), *dom);
+      TREX::transaction::Variable var((*a)->getName(), *dom);
       obs.restrictAttribute(var);
     }
   }

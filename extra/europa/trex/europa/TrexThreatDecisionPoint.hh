@@ -49,7 +49,7 @@
 # include <trex/europa/config.hh>
 
 // include plasma header as system files in order to disable warnings
-# define TREX_PP_SYSTEM_FILE <PLASMA/ThreatDecisionPoint.hh>
+# define TREX_PP_SYSTEM_FILE <ThreatDecisionPoint.hh>
 # include <trex/europa/bits/system_header.hh>
 
 namespace TREX {

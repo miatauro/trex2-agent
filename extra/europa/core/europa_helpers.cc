@@ -35,9 +35,9 @@
 #include "trex/europa/Assembly.hh"
 
 // include plasma header as system files in order to disable warnings
-# define TREX_PP_SYSTEM_FILE <PLASMA/RuleInstance.hh>
+# define TREX_PP_SYSTEM_FILE <RuleInstance.hh>
 # include <trex/europa/bits/system_header.hh>
-# define TREX_PP_SYSTEM_FILE <PLASMA/TokenVariable.hh>
+# define TREX_PP_SYSTEM_FILE <TokenVariable.hh>
 # include <trex/europa/bits/system_header.hh>
 
 using namespace TREX::europa;
@@ -56,7 +56,7 @@ void TREX::europa::details::restrict_base(EUROPA::TokenId const &tok,
       var->restrictBaseDomain(dom);
     } catch(Error e) {
       debugMsg("trex:always", "Failed to restrict domain of "
-               <<var->getName().toString()<<'('
+               <<var->getName()<<'('
                <<var->getId()<<")=="<<var->lastDomain().toString()<<" to "
                <<dom.toString()<<"\n\t"<<e.getMsg());
     }
@@ -137,8 +137,8 @@ EUROPA::TokenId TREX::europa::details::parent_token(EUROPA::ConstrainedVariableI
 std::ostream &TREX::europa::details::var_print(std::ostream &out, EUROPA::ConstrainedVariableId const &var) {
   EUROPA::TokenId tok = parent_token(var);
   if( tok.isId() )
-    out<<tok->getPredicateName().toString()<<'('<<tok->getKey()<<").";
-  return out<<var->getName().toString()<<'('<<var->getKey()<<')';
+    out<<tok->getPredicateName()<<'('<<tok->getKey()<<").";
+  return out<<var->getName()<<'('<<var->getKey()<<')';
 }
 
 
@@ -152,7 +152,7 @@ Assembly &TREX::europa::details::assembly_of(EUROPA::EngineComponentId const &co
 
 std::string TREX::europa::details::predicate_name(EUROPA::ObjectId const &obj, 
 						  std::string const &predicate) {
-  return obj->getType().toString()+"."+predicate;
+  return obj->getType()+"."+predicate;
 }
 
 /*

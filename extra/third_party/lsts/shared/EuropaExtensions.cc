@@ -1,7 +1,7 @@
 #include "trex/lsts/EuropaExtensions.hh"
 #include "LstsUtils.hh"
 
-#include <PLASMA/CFunctions.hh>
+#include <CFunctions.hh>
 
 #include <trex/europa/EuropaPlugin.hh>
 #include <trex/europa/Assembly.hh>

@@ -45,11 +45,11 @@
 #include <trex/domain/EnumDomain.hh>
 
 // include plasma header as system files in order to disable warnings
-# define TREX_PP_SYSTEM_FILE <PLASMA/Domains.hh>
+# define TREX_PP_SYSTEM_FILE <Domains.hh>
 # include <trex/europa/bits/system_header.hh>
-# define TREX_PP_SYSTEM_FILE <PLASMA/Object.hh>
+# define TREX_PP_SYSTEM_FILE <Object.hh>
 # include <trex/europa/bits/system_header.hh>
-# define TREX_PP_SYSTEM_FILE <PLASMA/PlanDatabase.hh>
+# define TREX_PP_SYSTEM_FILE <PlanDatabase.hh>
 # include <trex/europa/bits/system_header.hh>
 
 #include <memory>
@@ -135,7 +135,7 @@ tr::DomainBase *TREX::europa::details::trex_domain(EUROPA::Domain const &dom) {
       } else {
 	// don't know what it is
 	throw EuropaException("Don't know how to convert Europa type "+
-			      type->getName().toString()+
+			      type->getName()+
 			      " to an equivalent TREX domain.");
       }
       // If I reached this point tmp should be an EnumeratedDomain

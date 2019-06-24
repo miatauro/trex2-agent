@@ -106,10 +106,12 @@ foreach(COMPONENT ${Europa_FIND_COMPONENTS})
       "EUROPA_${UPPERCOMPONENT}_LIBRARY-NOTFOUND"
       CACHE FILEPATH "Cleared." FORCE)
   endif(NOT OLD_EUROPA_DEBUG EQUAL EUROPA_BEBUG)
+  message(STATUS "Looking for Europa library ${COMPONENT}${_europa_VARIANT}")
   find_library(EUROPA_${UPPERCOMPONENT}_LIBRARY
     NAMES ${COMPONENT}${_europa_VARIANT}
-    HINTS ${EUROPA_HINTS}/lib
-    DOCS "Looking for ${COMPONENT}")
+    #    HINTS ${EUROPA_HINTS}/lib
+    HINTS ${EUROPA_HINTS}
+    DOC "Looking for ${COMPONENT}")
   mark_as_advanced(EUROPA_${UPPERCOMPONENT}_LIBRARY)
   if(EUROPA_${UPPERCOMPONENT}_LIBRARY)
     set(EUROPA_${UPPERCOMPONENT}_NAME ${COMPONENT}${_europa_VARIANT})
@@ -136,17 +138,30 @@ if(NOT OLD_EUROPA_HINTS EQUAL EUROPA_HINTS)
     CACHE FILEPATH "Cleared." FORCE)
   
 endif(NOT OLD_EUROPA_HINTS EQUAL EUROPA_HINTS)
+message(STATUS "Looking for Europa include paths in ${EUROPA_HINTS}")
 find_path(EUROPA_INCLUDE_DIR
-  "PSSolvers.hh" HINTS ${EUROPA_HINTS}/include) 
-set(EUROPA_INCLUDE_DIRS ${EUROPA_INCLUDE_DIR} 
-  CACHE STRING "Europa include paths" FORCE)
+  "Europa2.cmake" HINTS ${EUROPA_HINTS})
+#This is slightly hackey. ~MJI
+file(GLOB children RELATIVE ${EUROPA_INCLUDE_DIR} ${EUROPA_INCLUDE_DIR}/*)
+foreach(child ${children})
+  if(IS_DIRECTORY ${EUROPA_INCLUDE_DIR}/${child})
+    list(APPEND EUROPA_INCLUDE_DIRS ${EUROPA_INCLUDE_DIR}/${child})
+    list(APPEND EUROPA_INCLUDE_DIRS ${EUROPA_INCLUDE_DIR}/${child}/base)
+    list(APPEND EUROPA_INCLUDE_DIRS ${EUROPA_INCLUDE_DIR}/${child}/component)
+  endif(IS_DIRECTORY ${EUROPA_INCLUDE_DIR}/${child})
+endforeach(child)
 
+set(EUROPA_INCLUDE_DIRS ${EUROPA_INCLUDE_DIRS} 
+  CACHE STRING "Europa include paths" FORCE)
+if("${EUROPA_INCLUDE_DIR}" STREQUAL "EUROPA_INCLUDE_DIR-NOTFOUND")
+  message(SEND_ERROR "Unable to find Europa include directory")
+endif("${EUROPA_INCLUDE_DIR}" STREQUAL "EUROPA_INCLUDE_DIR-NOTFOUND")
 
 if(EUROPA_FORCE_EFFECT)
   set(EUROPA_HAVE_EFFECT TRUE)
 else(EUROPA_FORCE_EFFECT)
   # Check if this version support actions
-  file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/europa_26.cc "#include <PLASMA/Token.hh>
+  file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/europa_26.cc "#include <Token.hh>
 
 bool isEffect(EUROPA::TokenId const &tok) {
   return tok->hasAttributes(EUROPA::PSTokenType::EFFECT);
@@ -157,10 +172,14 @@ int main() { return 0; }
 
   try_compile(EUROPA_HAVE_EFFECT "${CMAKE_CURRENT_BINARY_DIR}"
     "${CMAKE_CURRENT_BINARY_DIR}/europa_26.cc"
-    COMPILE_DEFINITIONS -I${EUROPA_INCLUDE_DIR}
+    CMAKE_FLAGS "-DINCLUDE_DIRECTORIES=${EUROPA_INCLUDE_DIRS}"
+    # COMPILE_DEFINITIONS -I${EUROPA_INCLUDE_DIR}
     OUTPUT_VARIABLE OUT)
   file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/europa_26.log "${OUT}")
 endif(EUROPA_FORCE_EFFECT)
+
+message(STATUS "Europa missing: ${_europa_MISSING}")
+message(STATUS "EUROPA_INCLUDE_DIR: ${EUROPA_INCLUDE_DIR}")
 
 if(_europa_MISSING OR NOT EUROPA_INCLUDE_DIR)
   set(EUROPA_FOUND FALSE)

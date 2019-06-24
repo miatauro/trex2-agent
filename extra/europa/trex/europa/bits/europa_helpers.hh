@@ -48,9 +48,11 @@
 
 # include "../config.hh"
 
-# define TREX_PP_SYSTEM_FILE <PLASMA/Token.hh>
+# define TREX_PP_SYSTEM_FILE <Token.hh>
 # include "system_header.hh"
-# define TREX_PP_SYSTEM_FILE <PLASMA/ConstrainedVariable.hh>
+# define TREX_PP_SYSTEM_FILE <ConstrainedVariable.hh>
+# include "system_header.hh"
+# define TREX_PP_SYSTEM_FILE <PSVarValue.hh>
 # include "system_header.hh"
 
 # include <boost/noncopyable.hpp>
@@ -128,7 +130,7 @@ namespace TREX {
       }
       /** @} */
 
-      inline EUROPA::TokenId const &active(EUROPA::TokenId const &tok) {
+      inline EUROPA::TokenId const active(EUROPA::TokenId const &tok) {
         if( tok->isMerged() ) 
           return tok->getActiveToken();
         return tok;

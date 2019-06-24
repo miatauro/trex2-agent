@@ -37,9 +37,9 @@
 # include <trex/europa/config.hh> // set the flags for europa
 
 // include plasma header as system files in order to disable warnings
-# define TREX_PP_SYSTEM_FILE <PLASMA/Domain.hh>
+# define TREX_PP_SYSTEM_FILE <Domain.hh>
 # include <trex/europa/bits/system_header.hh>
-# define TREX_PP_SYSTEM_FILE <PLASMA/DataType.hh>
+# define TREX_PP_SYSTEM_FILE <DataType.hh>
 # include <trex/europa/bits/system_header.hh>
 
 # include <trex/domain/DomainVisitor.hh>

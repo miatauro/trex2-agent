@@ -37,9 +37,9 @@
 # include <trex/europa/config.hh>
 
 // include plasma header as system files in order to disable warnings
-# define TREX_PP_SYSTEM_FILE <PLASMA/Variable.hh>
+# define TREX_PP_SYSTEM_FILE <Variable.hh>
 # include <trex/europa/bits/system_header.hh>
-# define TREX_PP_SYSTEM_FILE <PLASMA/Token.hh>
+# define TREX_PP_SYSTEM_FILE <Token.hh>
 # include <trex/europa/bits/system_header.hh>
 
 
@@ -184,8 +184,9 @@ namespace TREX {
          */
         void pending_discard();
         
-      private:
         void notifyDiscarded(Entity const *entity);
+      private:
+
         void updateBase(EUROPA::IntervalIntDomain const &dom);
         
         static EUROPA::IntervalIntDomain future(EUROPA::eint now);

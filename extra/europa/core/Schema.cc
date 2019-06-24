@@ -38,9 +38,9 @@
 #include <trex/utils/XmlUtils.hh>
 
 // include plasma header as system files in order to disable warnings
-# define TREX_PP_SYSTEM_FILE <PLASMA/Debug.hh>
+# define TREX_PP_SYSTEM_FILE <Debug.hh>
 # include <trex/europa/bits/system_header.hh>
-# define TREX_PP_SYSTEM_FILE <PLASMA/Error.hh>
+# define TREX_PP_SYSTEM_FILE <Error.hh>
 # include <trex/europa/bits/system_header.hh>
 
 #include <boost/algorithm/string/replace.hpp>
@@ -207,7 +207,7 @@ EuropaPlugin::~EuropaPlugin() {
 // manipulators
 
 void EuropaPlugin::declareFunction(Assembly const &assembly, EUROPA::CFunction *fn) {
-  debugMsg("trex:declare", "New function "<<fn->getName().toString()<<" declared");
+  debugMsg("trex:declare", "New function "<<fn->getName()<<" declared");
   m_schema->registerFunction(assembly, fn);
 }
 

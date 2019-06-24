@@ -31,7 +31,7 @@ bool Bind::guardSatisfied() const {
 void Bind::handleExecute() {
   if( guardSatisfied() ) {
     EUROPA::Domain &domain = getCurrentDomain(m_target);
-    debugMsg("trex:bind", "BEFORE "<<m_target->getName().toString()
+    debugMsg("trex:bind", "BEFORE "<<m_target->getName()
 	     <<"="<<m_target->toString()
 	     <<" "<<m_default->toString());
     if( domain.intersects(m_default->lastDomain()) ) {
@@ -45,7 +45,7 @@ void Bind::handleExecute() {
       else
 	domain.intersect(lb, lb);
     }
-    debugMsg("trex:bind", "AFTER "<<m_target->getName().toString()
+    debugMsg("trex:bind", "AFTER "<<m_target->getName()
 	     <<"="<<m_target->toString()
 	     <<" "<<m_default->toString());
   }

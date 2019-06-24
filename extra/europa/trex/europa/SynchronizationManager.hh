@@ -37,7 +37,7 @@
 # include "config.hh"
 
 // include plasma header as system files in order to disable warnings
-# define TREX_PP_SYSTEM_FILE <PLASMA/FlawManager.hh>
+# define TREX_PP_SYSTEM_FILE <FlawManager.hh>
 # include <trex/europa/bits/system_header.hh>
 
 namespace TREX {
@@ -128,6 +128,8 @@ namespace TREX {
        */
       std::string toString(EUROPA::EntityId const &entity) const;
       
+      bool noMoreFlaws();
+
     private:
      bool betterThan(const EUROPA::EntityId& a, 
 		     const EUROPA::EntityId& b, 

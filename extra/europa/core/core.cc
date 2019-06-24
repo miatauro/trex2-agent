@@ -56,13 +56,13 @@
 #include "private/CurrentState.hh"
 
 // include plasma header as system files in order to disable warnings
-# define TREX_PP_SYSTEM_FILE <PLASMA/CFunctions.hh>
+# define TREX_PP_SYSTEM_FILE <CFunctions.hh>
 # include <trex/europa/bits/system_header.hh>
-# define TREX_PP_SYSTEM_FILE <PLASMA/DataTypes.hh>
+# define TREX_PP_SYSTEM_FILE <DataTypes.hh>
 # include <trex/europa/bits/system_header.hh>
-# define TREX_PP_SYSTEM_FILE <PLASMA/OpenConditionDecisionPoint.hh>
+# define TREX_PP_SYSTEM_FILE <OpenConditionDecisionPoint.hh>
 # include <trex/europa/bits/system_header.hh>
-# define TREX_PP_SYSTEM_FILE <PLASMA/TokenVariable.hh>
+# define TREX_PP_SYSTEM_FILE <TokenVariable.hh>
 # include <trex/europa/bits/system_header.hh>
 
 
@@ -136,6 +136,24 @@ namespace TREX {
     }; // TREX::europa::CoreExtensions
 
 
+    class TrexActionSupportHeuristic : public EUROPA::SOLVERS::ActionSupportHeuristic {
+    public:
+      TrexActionSupportHeuristic(std::vector<EUROPA::TokenTypeId>& choices)
+	: ActionSupportHeuristic(), m_choices(choices) {}
+      ~TrexActionSupportHeuristic() {}
+      void getSupportCandidates(const TokenTypeId target,
+				std::vector<EUROPA::SOLVERS::SupportChoice>& supports) {
+	using EUROPA::SOLVERS::SupportChoice;
+	for(std::vector<EUROPA::TokenTypeId>::const_iterator it = m_choices.begin();
+	    it != m_choices.end();
+	    ++it) {
+	  supports.push_back(SupportChoice(target, *it, 0)); //NOTE: I have no idea what the numeric value here should be ~MJI
+	}
+      }
+    private:
+      std::vector<EUROPA::TokenTypeId> m_choices;
+    };
+
 #ifdef EUROPA_HAVE_EFFECT
     typedef EUROPA::SOLVERS::SupportedOCDecisionPoint default_oc_dp;
 
@@ -196,10 +214,14 @@ namespace TREX {
           TokenTypeId tokenType = schema->getTokenType(m_flawedToken->getFullTokenType());
           std::vector<TokenTypeId> supportActionTypes = schema->getTypeSupporters(tokenType);
           // TODO: allow heuristic function to be passed as a parameter to SupportToken
+	  //MJI TODO NOTE: there is a DefaultActionSupportHeuristic that may do something
+	  //better than this.  Investigate.
           if (!m_flawedToken->isFact() &&
               !m_flawedToken->hasAttributes(PSTokenType::EFFECT) &&
               (supportActionTypes.size() > 0))
-            m_choices.push_back(new EUROPA::SOLVERS::SupportToken(m_client,m_flawedToken,supportActionTypes));
+	    m_choices.push_back(new EUROPA::SOLVERS::SupportToken(m_client,m_flawedToken,
+								  new TrexActionSupportHeuristic(supportActionTypes)));
+            //m_choices.push_back(new EUROPA::SOLVERS::SupportToken(m_client,m_flawedToken,supportActionTypes));
           else
             m_choices.push_back(new EUROPA::SOLVERS::ActivateToken(m_client,m_flawedToken));
         }

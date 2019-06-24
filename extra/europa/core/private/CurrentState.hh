@@ -41,15 +41,17 @@
 # include <trex/europa/config.hh>
 
 // include plasma header as system files in order to disable warnings
-# define TREX_PP_SYSTEM_FILE <PLASMA/LabelStr.hh>
+# define TREX_PP_SYSTEM_FILE <LabelStr.hh>
 # include <trex/europa/bits/system_header.hh>
-# define TREX_PP_SYSTEM_FILE <PLASMA/Entity.hh>
+# define TREX_PP_SYSTEM_FILE <Entity.hh>
 # include <trex/europa/bits/system_header.hh>
-# define TREX_PP_SYSTEM_FILE <PLASMA/Timeline.hh>
+# define TREX_PP_SYSTEM_FILE <Timeline.hh>
 # include <trex/europa/bits/system_header.hh>
-# define TREX_PP_SYSTEM_FILE <PLASMA/Token.hh>
+# define TREX_PP_SYSTEM_FILE <Token.hh>
 # include <trex/europa/bits/system_header.hh>
-# define TREX_PP_SYSTEM_FILE <PLASMA/Solver.hh>
+# define TREX_PP_SYSTEM_FILE <Solver.hh>
+# include <trex/europa/bits/system_header.hh>
+# define TREX_PP_SYSTEM_FILE <PlanDatabaseListener.hh>
 # include <trex/europa/bits/system_header.hh>
 
 # include <fstream>
@@ -77,7 +79,7 @@ namespace TREX {
        * @relates TREX::europa::Assembly
        * @sa TREX::europa::SynchronizationManager
        */
-      class CurrentState :public EUROPA::Entity {
+      class CurrentState :public EUROPA::Entity, public EUROPA::PlanDatabaseListener {
       public:
         DECLARE_ENTITY_TYPE(CurrentState);
         
@@ -153,7 +155,7 @@ namespace TREX {
          * @return The set of all the possible predicate names that
          *         can be created for this timeline
          */
-        std::set<LabelStr> const &predicates() const {
+        std::set<std::string> const &predicates() const {
           return m_pred_names;
         }
         /** @brief Check for default predicate
@@ -373,9 +375,11 @@ namespace TREX {
           EUROPA::Id<CurrentState> m_target;
           std::list<EUROPA::TokenId>::const_iterator
           m_cand_from, m_tok, m_cand_to;
-          std::set<EUROPA::LabelStr>::const_iterator m_next_pred;
+          std::set<std::string>::const_iterator m_next_pred;
         }; // TREX::europa::details::CurrentState::DecisionPoint
         
+	void notifyRemoved(EUROPA::TokenId const token); //from PlanDatabaseListener
+
       private:
         /** @brief Constructor
          * @param[in] assembly The creator Assembly
@@ -490,7 +494,7 @@ namespace TREX {
         id_type            m_id;
         
         EUROPA::LabelStr           m_pred_default;
-        std::set<EUROPA::LabelStr> m_pred_names;
+        std::set<std::string> m_pred_names;
         
         EUROPA::TokenId       m_last_obs, m_prev_obs;
         EUROPA::Id<TimePoint>  m_frontier, m_prev_frontier;
@@ -512,8 +516,8 @@ namespace TREX {
        */
       class UpdateMatchFinder :public EUROPA::SOLVERS::MatchFinder {
       public:
-        void getMatches(EUROPA::SOLVERS::MatchingEngineId const &engine,
-                        EUROPA::EntityId const &entity,
+        void getMatches(EUROPA::SOLVERS::MatchingEngineId const engine,
+                        EUROPA::EntityId const entity,
                         std::vector<EUROPA::SOLVERS::MatchingRuleId> &result);
       }; // TREX::europa::details::UpdateMatchFinder
       
